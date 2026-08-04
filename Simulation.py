@@ -1,4 +1,4 @@
-from stack_simul import Stack
+from StackAlgorithm import Stack
 
 S = Stack()
 
