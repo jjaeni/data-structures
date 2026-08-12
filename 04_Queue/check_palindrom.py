@@ -1,4 +1,4 @@
-from DequeueAlgorithm import Dequeue
+from dequeue import Dequeue
 
 def check_palindrom(s):
     dq = Dequeue(s)

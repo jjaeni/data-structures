@@ -12,7 +12,7 @@ class Dequeue():
 		self.items.append(c)
 
 
-	def appendleft(self, c):
+	def append_left(self, c):
 		self.bucket = []
 		self.bucket.append(c)
 		
@@ -28,7 +28,7 @@ class Dequeue():
 		return self.result
 
         
-	def popleft(self):
+	def pop_left(self):
 		self.result = self.items[0]
 		self.items.pop(0)
 		return self.result
