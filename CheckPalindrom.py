@@ -5,14 +5,9 @@ def check_palindrom(s):
     palindrom = True
 
     while len(dq)>1:
-        print(dq.left(), dq.right())
-        if dq.left() != dq.right():
+         if dq.popleft() != dq.pop():
             palindrom = False
-
-        dq.popleft()
-        dq.pop()
-        print(len(dq))
     return palindrom
 
-s = input('문자열 입력하세요')
+s = input()
 print(check_palindrom(s))
