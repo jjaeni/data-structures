@@ -16,6 +16,13 @@ class SinglyLinkedList:
         self.size = 0 # list의 크기
 
 
+    def __iter__(self):
+        v = self.head
+        while v != None:
+            yield v # yield = return
+            v = v.next
+
+
     def __len__(self):
         return self.size
     
@@ -98,13 +105,6 @@ class SinglyLinkedList:
             if v.key == key:
                 return v
         return None
-
-
-    def __iter__(self):
-        v = self.head
-        while v != None:
-            yield v # yield = return
-            v = v.next
 
 
     def remove(self, node):
