@@ -10,8 +10,7 @@ def test_doubly_linked_list():
     L.push_back(7)
     L.print_list()
 
-    # L.splice_test(8) # .key로 수치 비교해야 한다...~!
-    L.splice(9, 2, 7)
+    L.splice(9, 5, 7)
     L.print_list()
     print('size:', len(L), '\n')
 

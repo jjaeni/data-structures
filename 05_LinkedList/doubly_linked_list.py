@@ -39,18 +39,6 @@ class DoublyLinkedList:
             print('None')
 
 
-    def splice_test(self, key):
-        new_node = Node(key)
-        cnt = 0
-        for v in self:
-            if v.key == new_node.key:
-                print(cnt, "번째 노드의 key값과 일치합니다")
-                return
-            else:
-                cnt+=1
-        print('당신이 입력한 노드는 연결리스트에 없습니다 돌아가!!!!')
-
-
     def splice(self, a, b, x):
         '''
         a, b, x : Node
@@ -62,33 +50,102 @@ class DoublyLinkedList:
         b : splice 하고 싶은 Node의 끝점
         x : splice한 노드들을 붙이고 싶은 위치 (x.next) 
         '''
-        if a == None or b == None or x == None: # (디버깅 완료)
+        if a == None or b == None or x == None:
             return
         
         a_node = None
         b_node = None
         x_node = None
-        
-        # 조건1: 리스트에서 노드 a 다음에 노드 b가 나와야 함.
-        # 조건2: a와 b 사이에 head 노드가 있으면 안 됨.
-        # 조건3: a와 b 사이에 x가 있으면 안 됨.
-        # 조건4: 주어진 a, b, x가 리스트 안에 없을 수 있다.
 
         # 조건4: 주어진 a, b, x가 리스트 안에 있는지 확인
+        # 조건2: head 노드는 중간에 없어야 함
         for v in self:
             if v.key == a:
                 a_node = v
             elif v.key == b:
-                b_node == v
+                b_node = v
             elif v.key == x:
                 x_node = v    
 
         if a_node == None or b_node == None or x_node == None:
+            print('입력한 노드가 리스트에 존재 안하잖아여 구라쟁이')
             return
 
-        # 조건3: 
-                    
-               
+        # 조건1: b는 a보다 뒤에 있어야 한다.
+        v = b_node.next
+        while v != self.head:
+            if v == a_node:
+                print('b가 a보다 앞에 있어요 돌아가세요.')
+                return
+            else:
+                v = v.next
+
+        # 조건3: a와 b 사이에 x가 존재하면 안 된다.
+        v = a_node.next
+        while v != b_node:
+            if v == x_node:
+                print('x node가 ab 사이에 존재하잔아여 !!!')
+                return
+            else:
+                v = v.next
+        del v
+
+        ap = a_node.prev
+        xn = x_node.next
+        # b.next가 존재할 때와, 존재하지 않을 때
+        if b_node.next != x_node: # b_node의 next 존재
+            bn = b_node.next
+
+            # ap <-> bn  x <-> a b
+            ap.next = bn
+            bn.prev = ap
+            x_node.next = a_node
+            a_node.prev = x_node
+            
+        else:
+            print('b_node의 next 없음')
+            # ap <-> x <-> a b
+            ap.next = x_node
+            x_node.prev = ap
+            x_node.next = a_node
+            a_node.prev = x_node
+
+        b_node.next = xn
+        xn.prev = b_node
+
+
+    def move_after(self, a, x):
+        self.splice(a, a, x)
+
+
+    def move_before(self, a, x):
+        self.splice(a, a, x.prev)
+
+
+    def insert_after(self, a, key):
+        new_node = Node(key)
+        self.move_after(new_node, a)
+
+
+    def insert_before(self, a, key):
+        new_node = Node(key)
+        self.move_before(new_node, a)
+
+
+    def push_front(self, key):
+        new_node = Node(key)
+        self.splice(new_node, new_node, self.head)
+
+
+    def push_back(self, key):
+        new_node = Node(key)
+
+        for v in self:
+            if v.next == self.head:
+                self.splice(new_node, new_node, v)
+            else:
+                v = v.next
+                                   
 
     def push_front(self, key):
         new_node = Node(key)
