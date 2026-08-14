@@ -26,17 +26,12 @@ class DoublyLinkedList:
     
 
     def print_list(self):
-        if self.size == 0:
-            print('h')
-
-        else:
-            print('h <->', end=' ')
-
-            for v in self:
-                print(v.key, '<->', end=' ')
-                v = v.next
-
-            print('h')
+        v = self.head.next
+        print('h -> ', end='')
+        while v != self.head:
+            print(str(v.key)+" -> ", end='')
+            v = v.next
+        print('h')
 
             
     def splice(self, a, b, x):
@@ -52,70 +47,24 @@ class DoublyLinkedList:
         '''
         if a == None or b == None or x == None:
             return
-        
-        a_node = None
-        b_node = None
-        x_node = None
 
-        # 조건4: 주어진 a, b, x가 리스트 안에 있는지 확인
-        # 조건2: head 노드는 중간에 없어야 함
-        for v in self:
-            if v.key == a.key:
-                a_node = v
-            if v.key == b.key:
-                b_node = v
-            if v.key == x.key:
-                x_node = v
-            v = v.next
+        ap = a.prev
+        xn = x.next
+        if b.next != x:
+            bn = b.next
 
-
-        if a_node == None:
-            return None
-        if b_node == None:
-            return None
-        if x_node == None:
-            return None
-
-
-        # 조건1: b는 a보다 뒤에 있어야 한다.
-        v = b_node.next
-        while v != self.head:
-            if v == a_node:
-                return None
-            else:
-                v = v.next
-
-
-        # 조건3: a와 b 사이에 x가 존재하면 안 된다.
-        v = a_node
-        while v != b_node:
-            if v == x_node:
-                return None
-            else:
-                 v = v.next
-
-
-        ap = a_node.prev
-        xn = x_node.next
-        # b.next가 존재할 때와, 존재하지 않을 때
-        if b_node.next != x_node: # b_node의 next 존재
-            bn = b_node.next
-
-            # ap <-> bn  x <-> a b
             ap.next = bn
             bn.prev = ap
-            x_node.next = a_node
-            a_node.prev = x_node
-            
+            x.next = a
+            a.prev = x
         else:
-            # ap <-> x <-> a b
-            ap.next = x_node
-            x_node.prev = ap
-            x_node.next = a_node
-            a_node.prev = x_node
+            ap.next = x
+            x.prev = ap
+            x.next = a
+            a.prev = x
 
-        b_node.next = xn
-        xn.prev = b_node
+        b.next = xn
+        xn.prev = b
 
 
     def move_after(self, a, x):
@@ -276,10 +225,17 @@ class DoublyLinkedList:
     def pop_back(self):
         tail = self.head.prev
         tp = tail.prev
+
+        if tail == self.head:
+            return None
+        
+        key = tail.key
+
         tp.next = self.head
         self.head.prev = tp
         
         self.size -= 1
+        return key
 
 
     def search(self, key):
@@ -292,25 +248,24 @@ class DoublyLinkedList:
 
 
     def is_empty(self):
-        if len(self) == 0:
-            return True
-        else:
-            return False
+        return self.head.next == self.head
 
 
     def first(self):
-        if len(self) == 0:
+        if self.head.next == self.head:
             return None
         return self.head.next
 
 
     def last(self):
-        if len(self) == 0:
+        if self.head.next == self.head:
             return None
         return self.head.prev
 
 
     def join(self, list):
+        if list.head.next == list.head:
+            return None
         stail = self.head.prev
         lhead = list.head.next
         ltail = list.head.prev
@@ -324,11 +279,19 @@ class DoublyLinkedList:
         self.size += len(list)
 
 
-    # splice 로직 수정이 필요함. > 예외 케이스 적용 splice로는 split 구현 불가
     def split(self, x):
         new_list = DoublyLinkedList()
+        tail = self.head.prev
 
-        self.splice(x, self.head.prev, new_list.head)
-        self.size -= len(new_list)
+        v = x
+        cnt = 1
+
+        while v != tail:
+            v = v.next
+            cnt += 1
+
+        self.splice(x, tail, new_list.head)
+        new_list.size = cnt
+        self.size -= cnt
 
         return new_list
