@@ -6,9 +6,14 @@ class Node:
         self.prev = self
 
     def __str__(self):
-        return str(self.key) # print(v)하면 v.key 리턴
+        return str(self.key)
 
 class DoublyLinkedList:
+    '''
+    예외처리 적용 중 중단한 파일입니다. (splice 메소드에서 확인 가능.)
+    1) input이 늘 연결리스트 내의 노드가 아닐 때
+    2) input이 Node가 아닌 key일 때
+    '''
     def __init__(self):
         self.head = Node()
         self.size = 0

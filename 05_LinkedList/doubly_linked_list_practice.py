@@ -9,6 +9,10 @@ class Node:
         return str(self.key) # print(v)하면 v.key 리턴
 
 class DoublyLinkedList:
+    '''
+    모든 input은 Node로 주어지며,
+    splice에 입력되는 매개변수들의 노드는 연결 리스트 내부에 있는 노드라는 가정하에 작성된 클래스입니다.
+    '''
     def __init__(self):
         self.head = Node()
         self.size = 0
