@@ -27,18 +27,18 @@ class DoublyLinkedList:
 
     def print_list(self):
         if self.size == 0:
-            print('None')
+            print('h')
 
         else:
-            print('None <->', end=' ')
+            print('h <->', end=' ')
 
             for v in self:
                 print(v.key, '<->', end=' ')
                 v = v.next
 
-            print('None')
+            print('h')
 
-
+            
     def splice(self, a, b, x):
         '''
         a, b, x : Node
@@ -60,35 +60,45 @@ class DoublyLinkedList:
         # 조건4: 주어진 a, b, x가 리스트 안에 있는지 확인
         # 조건2: head 노드는 중간에 없어야 함
         for v in self:
-            if v.key == a:
+            if v.key == a.key:
                 a_node = v
-            elif v.key == b:
+            if v.key == b.key:
                 b_node = v
-            elif v.key == x:
-                x_node = v    
+            if v.key == x.key:
+                x_node = v
+            v = v.next
 
-        if a_node == None or b_node == None or x_node == None:
-            print('입력한 노드가 리스트에 존재 안하잖아여 구라쟁이')
+
+        if a_node == None:
+            print('a_node가 없어요') #
             return
+        if b_node == None:
+            print('b_node가 없어요') #
+            return
+        if x_node == None:
+            print('x_node가 없어요') #
+            return
+
 
         # 조건1: b는 a보다 뒤에 있어야 한다.
         v = b_node.next
         while v != self.head:
             if v == a_node:
-                print('b가 a보다 앞에 있어요 돌아가세요.')
+                print('b가 a보다 앞에 있어요 돌아가세요.') #
                 return
             else:
                 v = v.next
 
+
         # 조건3: a와 b 사이에 x가 존재하면 안 된다.
-        v = a_node.next
+        v = a_node
         while v != b_node:
             if v == x_node:
-                print('x node가 ab 사이에 존재하잔아여 !!!')
+                print('x node가 ab 사이에 존재') #
                 return
             else:
-                v = v.next
-        del v
+                 v = v.next
+
 
         ap = a_node.prev
         xn = x_node.next
@@ -103,7 +113,6 @@ class DoublyLinkedList:
             a_node.prev = x_node
             
         else:
-            print('b_node의 next 없음')
             # ap <-> x <-> a b
             ap.next = x_node
             x_node.prev = ap
@@ -113,101 +122,199 @@ class DoublyLinkedList:
         b_node.next = xn
         xn.prev = b_node
 
+        self.print_list()
+
 
     def move_after(self, a, x):
-        self.splice(a, a, x)
+        '''
+        a, x : Node
+        '''
+        a_node = None
+        x_node = None
+
+        for v in self:
+            if v.key == a.key:
+                a_node = v
+            if v.key == x.key:
+                x_node = v
+
+        if a_node == None:
+            print('a 노드가 없어요') #
+            return
+        if x_node == None:
+            print('x 노드가 없어요') #
+            return
+
+        self.splice(a_node, a_node, x_node)
 
 
     def move_before(self, a, x):
-        self.splice(a, a, x.prev)
+        '''
+        a, x : Node
+        '''
+        a_node = None
+        x_node = None
+        
+        for v in self:
+            if v.key == a.key:
+                a_node = v
+            if v.key == x.key:
+                x_node = v
+        
+        if a_node == None:
+            print('a 노드가 없어요') #
+            return
+        if x_node == None:
+            print('x 노드가 없어요') #
+            return
+
+        self.splice(a_node, a_node, x_node.prev)
 
 
     def insert_after(self, a, key):
+        '''
+        a : Node
+        key : key
+        '''
         new_node = Node(key)
-        self.move_after(new_node, a)
+
+        if a == None:
+            a_node = self.head
+        else:
+            a_node = None
+
+            for v in self:
+                if v.key == a.key:
+                    a_node = v
+                    an = a_node.next
+                else:
+                    v = v.next
+
+        if a_node == None:
+            print('a node가 없어요. 다시 입력하세요') #
+            return
+        
+        an = a_node.next
+        a_node.next = new_node
+        new_node.prev = a_node
+        new_node.next = an
+        an.prev = new_node
+
+        self.size += 1
+        self.print_list()
+
+
+    def push_front(self, key):
+        self.insert_after(None, key)
 
 
     def insert_before(self, a, key):
+        '''
+        a : Node
+        key : key
+        '''
         new_node = Node(key)
-        self.move_before(new_node, a)
 
+        if a == None:
+            for v in self:
+                if v.next == self.head:
+                    a_node = v # 마지막꺼
+                    an = v.next # 헤드
 
-    def push_front(self, key):
-        new_node = Node(key)
-        self.splice(new_node, new_node, self.head)
+                    a_node.next = new_node
+                    new_node.prev = a_node
+                    new_node.next = an
+                    an.prev = new_node
+                else:
+                    v = v.next
+        else:
+            a_node = None
+            for v in self:
+                if v.key == a.key:
+                    a_node = v
+                    ap = a_node.prev
+
+                    ap.next = new_node
+                    new_node.prev = ap
+                    new_node.next = a_node
+                    a_node.prev = new_node
+                else:
+                    v = v.next
+
+        if a_node == None:
+            print('a node가 없어요. 다시 입력하세요') #
+            return
+
+        self.size += 1
+        self.print_list()
 
 
     def push_back(self, key):
-        new_node = Node(key)
+        self.insert_before(None, key)
+
+
+    def delete_node(self, x):
+        '''
+        x : Node
+        '''
+        x_node = None
 
         for v in self:
-            if v.next == self.head:
-                self.splice(new_node, new_node, v)
+            if v.key == x.key:
+                x_node = v
             else:
                 v = v.next
-                                   
 
-    def push_front(self, key):
-        new_node = Node(key)
+        if x_node == None or x == None:
+            print('x 노드가 없거나, head 원소입니다') #
+            return
 
-        if len(self) == 0:
-            h = self.head
-            h.next = new_node
-            h.prev = new_node
+        xp = x_node.prev
+        xn = x_node.next
+        xp.next = xn
+        xn.prev = xp
 
-            new_node.next = h
-            new_node.prev = h
-
-        else:
-            x = self.head
-            y = self.head.next
-
-            new_node.prev = x
-            new_node.next = y
-            x.next = new_node
-            y.prev = new_node
-
-        self.size += 1
-
-
-    def push_back(self, key):
-        new_node = Node(key)
-
-        if len(self) == 0:
-            self.head.next = new_node
-            self.head.prev = new_node
-
-            new_node.next = self.head
-            new_node.prev = self.head
-
-        else:
-            # x <- (new_node) <-> self.head
-            x = self.head.prev
-            y = self.head
-
-            new_node.next = self.head
-            new_node.prev = self.head.prev
-            x.next = new_node
-            self.head.prev = new_node
-
-        self.size += 1
+        self.size -= 1
+        self.print_list()
 
 
     def pop_front(self):
-        x = self.head
-        y = x.next # self.head.next
-        z = y.next
+        v = self.head.next
+        vp = v.prev
+        vn = v.next
 
-        if len(self) == 0:
+        if vp == v:
+            print('헤드밖에 업다') #
             return None
-        else:
-            x.next = z
-            x.prev = z
-            z.prev = x
-            z.next = x
-            self.size -= 1
-            return y.key
 
-            
+        key = v.key
+
+        vp.next = vn
+        vn.prev = vp
+
+        self.size -= 1
+        self.print_list()
+
+        return key
+
+
     def pop_back(self):
-        pass
+        v_node = None
+        
+        for v in self:
+            if v.next == self.head:
+                v_node = v
+                vp = v_node.prev
+                vn = v_node.next
+            else:
+                v = v.next
+
+        if v_node == None:
+            print('헤드박에 업다') #
+            return None
+
+        vp.next = vn
+        vn.prev = vp
+
+        self.size -= 1
+        self.print_list()
