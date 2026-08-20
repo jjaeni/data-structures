@@ -20,7 +20,7 @@ class HashTable:
 
 
     def hash_function(self, key):
-        return key % self.size
+        return key%self.size
 
 
     def find_slot(self, key):
@@ -28,7 +28,7 @@ class HashTable:
         start = i
         while self.keys[i] != None and self.keys[i] != key:
             i = (i+1)%self.size
-            if (i == start):
+            if i == start:
                 return 'FULL'
         return i
 
@@ -45,11 +45,18 @@ class HashTable:
             elif self.keys[i] == None:
                 self.keys[i] = key
                 self.values[i] = value
-        
+
+            return key
+
 
     def remove(self, key):
         i = self.find_slot(key)
         j = i
+        if i == 'FULL':
+            return None
+
+        if self.keys[i] != key:
+            return None
 
         while True:
             self.keys[i] = None
@@ -61,18 +68,18 @@ class HashTable:
 
             k = self.hash_function(self.keys[j])
 
-            if not (i==k or i<k<=j or j<i<k or k<i<j):
-                break
-
-            self.keys[i] = self.keys[j]
-            self.values[i] = self.values[j]
-            i = j
+            if ((i-k)%self.size) < ((j-k)%self.size):
+                self.keys[i] = self.keys[j]
+                self.values[i] = self.values[j]
+                i = j
+            else:
+                continue
 
 
     def search(self, key):
         i = self.find_slot(key)
 
         if self.keys[i] == key:
-            return key
+            return self.values[i]
         else:
             return None
